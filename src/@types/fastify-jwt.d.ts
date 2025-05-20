@@ -6,6 +6,7 @@ declare module '@fastify/jwt' {
       sub: string
       name: string
       avatarUrl?: string
+      email: string
     }
   }
 }
