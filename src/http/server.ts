@@ -14,6 +14,7 @@ import {
 import { writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { authUserGoogleRoute } from './routes/auth-user-google-route'
+import { createExpenseRoute } from './routes/create-expense-route'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -35,6 +36,24 @@ app.register(fastifySwagger, {
       title: 'go track',
       version: '1.0.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'oauth2',
+          flows: {
+            authorizationCode: {
+              authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+              tokenUrl: 'https://oauth2.googleapis.com/token',
+              scopes: {
+                openid: 'OpenID Connect scope',
+                email: 'Access to your email address',
+                profile: 'Access to your basic profile info',
+              },
+            },
+          },
+        },
+      },
+    },
   },
   transform: jsonSchemaTransform,
 })
@@ -44,6 +63,7 @@ app.register(fastifySwaggerUi, {
 })
 
 app.register(authUserGoogleRoute)
+app.register(createExpenseRoute)
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, () => {
   console.log('Running server http://localhost:3333')
