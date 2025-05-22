@@ -5,6 +5,22 @@
     "version": "1.0.0"
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+            "tokenUrl": "https://oauth2.googleapis.com/token",
+            "scopes": {
+              "openid": "OpenID Connect scope",
+              "email": "Access to your email address",
+              "profile": "Access to your basic profile info"
+            }
+          }
+        }
+      }
+    },
     "schemas": {}
   },
   "paths": {
@@ -49,6 +65,89 @@
                   "required": [
                     "accessToken"
                   ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses": {
+      "post": {
+        "tags": [
+          "Expense"
+        ],
+        "description": "create expense",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 4
+                  },
+                  "value": {
+                    "type": "number",
+                    "exclusiveMinimum": true,
+                    "minimum": 1
+                  },
+                  "service": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "title",
+                  "value",
+                  "service"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "expenseId": {
+                      "type": "string",
+                      "pattern": "^[0-9a-z]+$"
+                    }
+                  },
+                  "required": [
+                    "expenseId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "default": "\tUnauthorized"
+                    }
+                  },
                   "additionalProperties": false
                 }
               }
