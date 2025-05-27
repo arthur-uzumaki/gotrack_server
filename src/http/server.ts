@@ -16,6 +16,7 @@ import { resolve } from 'node:path'
 import { authUserGoogleRoute } from './routes/auth-user-google-route'
 import { createExpenseRoute } from './routes/create-expense-route'
 import { getExpensesByMonthRoute } from './routes/get-expenses-by-month-route'
+import { getTotalByMonthRoute } from './routes/get-total-by-month-route'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -66,6 +67,7 @@ app.register(fastifySwaggerUi, {
 app.register(authUserGoogleRoute)
 app.register(createExpenseRoute)
 app.register(getExpensesByMonthRoute)
+app.register(getTotalByMonthRoute)
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }, () => {
   console.log('Running server http://localhost:3333')
